@@ -15,7 +15,7 @@ output:
     toc: yes
     toc_depth: 5
 editor_options: 
-  chunk_output_type: console
+  chunk_output_type: inline
 ---
 
 ## Overview
@@ -32,6 +32,7 @@ We will do an EDA for the WHO COVID-19 data. You can take a look at the [weekly 
 
 
 ```{r}
+library(tidyverse)
 covidmobility <- read_csv("~/Downloads/Global_Mobility_Report.csv") %>% filter(is.na(sub_region_1)) %>% mutate(Date_reported = as.Date(date), Country_code = country_region_code) %>% select(-c("sub_region_1",
 "sub_region_2",
 "metro_area",
@@ -44,14 +45,31 @@ covidmobility <- read_csv("~/Downloads/Global_Mobility_Report.csv") %>% filter(i
 covidWHO <- read_csv("https://covid19.who.int/WHO-COVID-19-global-data.csv") %>%  mutate(Date_reported = as.Date(Date_reported))
 
 ```
+
 ```{r}
 covidmobility
 covidWHO
 ```
 
 ```{r}
-covid_data = inner_join(covidmobility,covidWHO,by = c("Country_code","Date_reported"))
+covid_data = inner_join(covidmobility,covidWHO,by = c("Country_code","Date_reported")) %>% select(c("Country_code",
+                                                                                                    "Country",
+                                                                                                    "Date_reported",
+                                                                                                    "retail_and_recreation_percent_change_from_baseline",
+                                                                                                    "grocery_and_pharmacy_percent_change_from_baseline",
+                                                                                                    "parks_percent_change_from_baseline",
+                                                                                                    "transit_stations_percent_change_from_baseline",
+                                                                                                    "workplaces_percent_change_from_baseline",
+                                                                                                    "residential_percent_change_from_baseline",
+                                                                                                    "WHO_region",
+                                                                                                    "New_cases",
+                                                                                                    "Cumulative_cases",
+                                                                                                    "New_deaths",
+                                                                                                    "Cumulative_deaths")) #cleaning up data, selecting variables we want
+covid_data
 ```
+
+
 
 This data set is maintained by WHO and updated constantly. The first task for you is to understand this data set, e.g., the meaning of the variables and their values. To this end, you can make use of your preferred search engine, or read the documentation for this data set. 
 
